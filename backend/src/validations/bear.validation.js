@@ -1,5 +1,10 @@
 const z = require('zod');
 
+/**
+ * Validation schema for bear search endpoint
+ * @type {Object}
+ * @property {import('zod').ZodObject} query - Query parameter schema
+ */
 const searchBear = {
     query: z.object({
         q: z.string(),
@@ -10,6 +15,12 @@ const searchBear = {
     }),
 };
 
+/**
+ * Validation schema for H3 spatial aggregation endpoint
+ * Validates geographic bounding box and H3 resolution parameters
+ * @type {Object}
+ * @property {import('zod').ZodObject} query - Query parameter schema
+ */
 const countBearInRange = {
     query: z.object({
         year: z.coerce.number().int().optional(),
@@ -21,6 +32,12 @@ const countBearInRange = {
     }),
 };
 
+/**
+ * Validation schema for getting bear details by ID
+ * @type {Object}
+ * @property {import('zod').ZodObject} params - URL parameter schema
+ * @property {import('zod').ZodObject} query - Query parameter schema
+ */
 const getBearDetail = {
     params: z.object({
         id: z.coerce.number().int(),

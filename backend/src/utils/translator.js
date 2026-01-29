@@ -5,9 +5,13 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 /**
- * Hàm dịch dữ liệu gấu từ tiếng Nhật sang Anh và Việt
- * @param {string} name - Tên tiếng Nhật
- * @param {string} description - Mô tả tiếng Nhật
+ * Translate bear data from Japanese to English and Vietnamese using Gemini AI
+ * @param {string} name - Bear name in Japanese
+ * @param {string} description - Bear description in Japanese
+ * @returns {Promise<Object|null>} Translation object with name_en, description_en, name_vi, description_vi or null on error
+ * @example
+ * const translated = await translateBearData("熊", "熊の説明");
+ * // Returns: { name_en: "Bear", description_en: "...", name_vi: "Gấu", description_vi: "..." }
  */
 const translateBearData = async (name, description) => {
     try {
@@ -41,6 +45,18 @@ const translateBearData = async (name, description) => {
     }
 };
 
+/**
+ * Batch translate multiple bear records from Japanese to English and Vietnamese
+ * More efficient than individual translations for multiple records
+ * @param {Array<Object>} bears - Array of bear objects with fid, name, and description
+ * @param {number} bears[].fid - Bear record ID
+ * @param {string} bears[].name - Bear name in Japanese
+ * @param {string} bears[].description - Bear description in Japanese
+ * @returns {Promise<Array<Object>|null>} Array of translated objects or null on error
+ * @example
+ * const bears = [{ fid: 1, name: "熊", description: "..." }];
+ * const translated = await translateBatch(bears);
+ */
 const translateBatch = async (bears) => {
     try {
         
