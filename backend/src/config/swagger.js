@@ -1,5 +1,10 @@
 const swaggerJsdoc = require('swagger-jsdoc');
 
+/**
+ * Swagger JSDoc configuration options
+ * Scans route files for JSDoc comments to generate API documentation
+ * @type {Object}
+ */
 const options = {
     definition: {
         openapi: '3.0.0',
@@ -18,5 +23,9 @@ const options = {
     apis: ['./src/routes/v1/*.js'],
 };
 
+/**
+ * Generated OpenAPI specification object for use with swagger-ui-express
+ * @type {Object}
+ */
 const specs = swaggerJsdoc(options);
 module.exports = specs;

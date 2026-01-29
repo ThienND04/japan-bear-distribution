@@ -1,6 +1,6 @@
-# Japan Bears Tracking System
+# Japan Bear Distribution Tracking System
 
-[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat&logo=next.js)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![Deck.gl](https://img.shields.io/badge/Deck.gl-Visualization-blue?style=flat&logo=uber)](https://deck.gl/)
 [![GeoServer](https://img.shields.io/badge/GeoServer-WMS%2FWMTS-green?style=flat&logo=geoserver)](https://geoserver.org/)
 [![PostGIS](https://img.shields.io/badge/PostgreSQL-PostGIS-336791?style=flat&logo=postgresql)](https://postgis.net/)
@@ -24,22 +24,26 @@ Hệ thống bản đồ tương tác trực quan hóa dữ liệu sự xuất h
 * **Lọc theo thời gian thực:** Timeline Slider cho phép lọc dữ liệu gấu theo từng năm.
 * **Phân tích mật độ (Clustering):** Sử dụng thuật toán **H3 (Uber)** để gom nhóm và hiển thị mật độ gấu theo độ phân giải động (Dynamic Resolution) dựa trên mức zoom.
 * **Tìm kiếm thông minh:** API tìm kiếm hỗ trợ lọc theo thuộc tính.
+* **Đa ngôn ngữ:** Hỗ trợ 3 ngôn ngữ (Tiếng Việt, English, 日本語) với tự động dịch dữ liệu.
+* **Chế độ xem linh hoạt:** Chuyển đổi giữa chế độ điểm (Point) và mật độ (Heatmap).
 
 ---
 
 ## Kiến trúc hệ thống & Công nghệ
 
 ### 1. Frontend
-* **Framework:** Next.js (React)
+* **Framework:** Next.js 15 (React 19) với TypeScript
 * **Map Engine:** Deck.gl (sử dụng `MVTLayer` cho Vector Tiles, `H3HexagonLayer` cho Cluster).
 * **Base Map:** React-Map-GL (Mapbox wrapper).
 * **Styling:** Tailwind CSS.
+* **Internationalization:** Context API cho đa ngôn ngữ (Tiếng Việt, English, 日本語).
 
 ### 2. Backend API
 * **Framework:** Node.js + Express.
-* **Validation:** Zod .
+* **Validation:** Joi.
 * **Database Driver:** `pg` (node-postgres).
 * **Spatial Logic:** `h3-js` (xử lý lục giác ngay tại server).
+* **Translation:** Google Translate API (hỗ trợ đa ngôn ngữ).
 
 ### 3. GIS Server & Database
 * **Database:** PostgreSQL 14+ với extension **PostGIS**.
@@ -67,8 +71,8 @@ Hệ thống bản đồ tương tác trực quan hóa dữ liệu sự xuất h
 Các bước thiết lập để phục vụ Vector Tiles:
 
 1.  **Khởi tạo Workspace:**
-    * Tạo workspace mới với tên: `map-project`.
-    * Namespace URI: `http://localhost/geoserver/map-project`.
+    * Tạo workspace mới với tên: `japan-bear-distribution`.
+    * Namespace URI: `http://localhost/geoserver/japan-bear-distribution`.
 
 2.  **Publish Layers:**
     * Import các bảng dữ liệu từ PostGIS Store và publish thành các Layer tương ứng.
@@ -81,8 +85,8 @@ Các bước thiết lập để phục vụ Vector Tiles:
 ## Khởi chạy
 ### 1. Clone dự án
 ``` shell
-git clone https://github.com/ThienND04/map-project.git
-cd map-project 
+git clone https://github.com/ThienND04/japan-bear-distribution.git
+cd japan-bear-distribution
 ```
 ### 2. Backend
 Cài đặt geoserver và postgis

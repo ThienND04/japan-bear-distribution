@@ -1,12 +1,30 @@
+/**
+ * @fileoverview Bear service layer handling business logic for bear data
+ * @module services/bear.service
+ */
+
 const axios = require('axios');
 const db = require('../config/postgres');
 const h3 = require('h3-js');
 
+/**
+ * Get all distinct years with bear sighting data
+ * @returns {Promise<Array<number>>} Array of years in descending order
+ */
 const getYears = async () => {
     const query = 'SELECT DISTINCT year FROM japan_bears ORDER BY year desc;';
     return db.query(query).then(res => res.rows.map(row => row.year));
 };
 
+/**
+ * Search for bear sightings by keyword with pagination and language support
+ * @param {string} keyword - Search keyword to match against name and description
+ * @param {number} [year] - Optional year filter
+ * @param {string} [lang='ja'] - Language code (ja, en, vi) for translated fields
+ * @param {number} [page=1] - Page number for pagination
+ * @param {number} [limit=10] - Number of results per page
+ * @returns {Promise<Array<Object>>} Array of bear records with coordinates and translations
+ */
 const search = async (
     keyword,
     year,
@@ -61,6 +79,17 @@ const search = async (
     return result.rows;
 };
 
+/**
+ * Count bear sightings within a geographic bounding box using H3 spatial indexing
+ * Groups bear locations into H3 hexagonal cells for efficient heatmap visualization
+ * @param {number} year - Year to filter bear data
+ * @param {number} minLat - Minimum latitude of bounding box
+ * @param {number} maxLat - Maximum latitude of bounding box
+ * @param {number} minLng - Minimum longitude of bounding box
+ * @param {number} maxLng - Maximum longitude of bounding box
+ * @param {number} resolution - H3 resolution level (0-15, higher = smaller cells)
+ * @returns {Promise<Array<{hex: string, count: number}>>} Array of H3 cell IDs with bear counts
+ */
 const countInRange = async (
     year, minLat, maxLat, minLng, maxLng, resolution
 ) => {
@@ -100,6 +129,12 @@ const countInRange = async (
     return aggregatedData;
 };
 
+/**
+ * Get detailed information about a specific bear sighting
+ * @param {number} id - Bear record ID (fid)
+ * @param {string} [lang='ja'] - Language code (ja, en, vi) for translated content
+ * @returns {Promise<Object>} Bear details with coordinates and localized name/description
+ */
 const getBearDetail = async (id, lang = "ja") => {
     let nameColumn = "name";
     let descColumn = "description";
@@ -122,6 +157,14 @@ const getBearDetail = async (id, lang = "ja") => {
     return result.rows[0];
 };
 
+/**
+ * Create a new bear record with automatic translation to multiple languages
+ * @param {Object} data - Bear data object
+ * @param {string} data.name - Bear name in Japanese
+ * @param {string} data.description - Description in Japanese
+ * @param {number} data.year - Year of sighting
+ * @returns {Promise<Object>} Created bear record with translations
+ */
 const createBear = async (data) => {
     const translated = await translateBearData(data.name, data.description);
 
